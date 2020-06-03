@@ -1,0 +1,26 @@
+#
+# Containers used to develop the environment.
+#
+version: '3.0'
+services:
+
+  postfix:
+    image: centos:8
+    volumes:
+      - ./datadir:/mysql-datadir:z
+    entrypoint:
+      - /bin/tail
+      - -f
+      - /etc/hosts
+  mysql:
+    image: mysql:8
+    volumes:
+    - ./docker/my.cnf.d/my.cnf:/etc/my.cnf:rw
+    - ./docker/my.cnf.d/server.crt:/etc/mysql/server.crt:rw
+    - ./docker/my.cnf.d/server.key:/etc/mysql/server.key:rw
+    - ./docker/my.cnf.d/initfiles:/docker-entrypoint-initdb.d:rw
+    - ./datadir:/var/lib/mysql:rw
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+
+

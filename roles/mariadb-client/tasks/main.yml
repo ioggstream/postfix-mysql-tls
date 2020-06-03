@@ -1,0 +1,13 @@
+---
+- name: Add MariaDB repo to dnf
+  template:
+    src: mariadb.repo
+    dest: /etc/yum.repos.d/mariadb.repo
+    mode: 0644
+    owner: root
+    group: root
+
+- name: Install client packages
+  package:
+    name:
+    - mariadb-connector-c

@@ -1,0 +1,8 @@
+mysql_server: mysql
+
+#
+# Consider using a dictionary if you need multiple users
+#
+mysql_user: foo
+mysql_foo_cert: /mysql-datadir/client-cert.pem
+mysql_foo_key:  /mysql-datadir/client-key.pem

@@ -1,0 +1,24 @@
+#
+# mysql config file for local(8) aliases(5) lookups
+#
+
+#
+# cat >> /etc/postfix/main.cf << EOF
+# alias_maps = mysql:/postfix/mysql-aliases.cf
+# EOF
+hosts = {{mysql_server}}
+tls_cert_file =  {{mysql_foo_cert}}
+tls_key_file = {{mysql_foo_key}}
+
+# The database name on the servers.
+dbname = customer_database
+
+# For Postfix 2.2 and later The SQL query template.
+# See mysql_table(5) for details.
+#query = SELECT "10.0.0.1"
+query = SELECT forw_addr FROM mxaliases WHERE alias='%s' AND status='paid'
+
+# This is necessary to make UTF8 queries work for Postfix 2.11 .. 3.1,
+# and is the default setting as of Postfix 3.2.
+option_group = client
+option_file = /etc/postfix/my-client.cnf

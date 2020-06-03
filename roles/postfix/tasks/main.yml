@@ -1,0 +1,34 @@
+---
+- name: Install postfix and mysql
+  package:
+    name:
+      - postfix
+      - postfix-mysql
+- name: Install the mysql client configuration file
+  template:
+    src: my-client.cnf.j2
+    dest: /etc/postfix/my-client.cnf
+- name: >-
+    Install the mysql alias map file referencing
+    my-client.cnf
+  template:
+    src: mysql-aliases.cf
+    dest: /etc/postfix/mysql-aliases.cf
+
+- name: Add the alias map to main.cf
+  lineinfile:
+    path: /etc/postfix/main.cf
+    regexp: '^alias_map.*'
+    line: |-
+      alias_maps = mysql:/etc/postfix/mysql-aliases.cf
+
+- name: Listen on all interfaces
+  lineinfile:
+    path: /etc/postfix/main.cf
+    regexp: '^inet_interfaces ='
+    line: |-
+      inet_interfaces = all
+
+- name: Start postfix
+  command: |-
+    postfix -c /etc/postfix/ start
